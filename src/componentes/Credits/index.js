@@ -4,7 +4,6 @@ import { View, Linking, Text, StyleSheet } from 'react-native';
 export default Credits = () => {
     return (
         <View style={styles.content}>
-            <Text style={styles.commonText}>Powered by Muryarth</Text>
             <Text style={[styles.hyperlink, styles.commonText]}
                 onPress={() => {
                     Linking.openURL('https://www.zapsplat.com');

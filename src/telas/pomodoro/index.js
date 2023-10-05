@@ -57,9 +57,9 @@ export default function Pomodoro() {
       <View style={styles.container}>
         <Text>Bem vindo ao Pomodoro! :)</Text>
         <Text>Bons estudos.</Text>
-        <Relogio onFocusTime />
+        <Relogio timeInMinutes={30} />
         <Schedule ciclesLength={3} subciclesLength={4} />
-        <View style={styles.buttonGroup}>
+        {/* <View style={styles.buttonGroup}>
           {onFocusTime ? (
             <>
               <StyledButton
@@ -80,7 +80,7 @@ export default function Pomodoro() {
               style="secondaryButton"
             />
           )}
-        </View>
+        </View> */}
       </View>
       <Credits />
     </>
