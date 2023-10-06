@@ -14,24 +14,16 @@ const formatToTimeString = (timeNumber) => {
   return timeNumber.toString();
 };
 
-export default function countdownClock({ timeInMinutes }) {
+export default function countdownClock({ timeInMinutes, isActive, isPaused }) {
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState(formatToTimeString(timeInMinutes));
   const [seconds, setSeconds] = useState("00");
 
-  const countdownTime = (timeInMinutes) => {
-    let timeInSeconds = timeInMinutes * 60;
+  // resetTimer();
 
-    const interval = setInterval(async () => {
-      timeInSeconds--;
-
-      changeTimer(timeInSeconds);
-
-      if (timeInSeconds < 0) {
-        clearInterval(interval);
-      }
-    }, 1000);
-  };
+  useEffect(() => {
+    return runTimer(isActive, timeInMinutes);
+  }, [isActive]);
 
   const changeTimer = (timeInSeconds) => {
     let totalTimeInSeconds = timeInSeconds;
@@ -49,14 +41,28 @@ export default function countdownClock({ timeInMinutes }) {
     }
   };
 
+  const runTimer = (isActive, timeInMinutes) => {
+    let timeInSeconds = timeInMinutes * 60;
+    let interval;
+
+    if (isActive) {
+      interval = setInterval(() => {
+        timeInSeconds--;
+
+        changeTimer(timeInSeconds);
+
+        timeInSeconds < 0 ? clearInterval(interval) : null;
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  };
+
   return (
     <>
       <Text style={styles.relogio}>{`${hours}:${minutes}:${seconds}`}</Text>
-      <StyledButton
-        title="Acionar"
-        action={() => countdownTime(timeInMinutes)}
-        style="secondaryButton"
-      />
     </>
   );
 }
