@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
+import { Audio } from "expo-av";
 
 import StyledButton from "../../../componentes/StyledButton";
+import BellRing from "../../../../assets/sounds/bell_single_ring_zapsplat.mp3";
 
 import styles from "./styles";
 
@@ -19,10 +21,23 @@ export default function countdownClock({ timeInMinutes, isActive, isPaused }) {
   const [minutes, setMinutes] = useState(formatToTimeString(timeInMinutes));
   const [seconds, setSeconds] = useState("00");
 
+  // Toca o som
+  const playSound = async (time) => {
+    console.log("Loading sound...");
+
+    const { sound } = await Audio.Sound.createAsync(BellRing);
+
+    // Toca o som, após intervalo de tempo definido
+    setTimeout(async function () {
+      console.log("Playing sound!");
+      await sound.playAsync();
+    }, time);
+  };
+
   // resetTimer();
 
   useEffect(() => {
-    return runTimer(isActive, timeInMinutes);
+    return runTimer(isActive, 0.1);
   }, [isActive]);
 
   const changeTimer = (timeInSeconds) => {
@@ -51,7 +66,10 @@ export default function countdownClock({ timeInMinutes, isActive, isPaused }) {
 
         changeTimer(timeInSeconds);
 
-        timeInSeconds < 0 ? clearInterval(interval) : null;
+        if (timeInSeconds <= 0) {
+          playSound(1);
+          clearInterval(interval);
+        }
       }, 1000);
     }
 
