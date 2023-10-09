@@ -5,7 +5,7 @@ import Rotas from "./src/rotas";
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar />
+      <StatusBar/>
       <Rotas />
     </SafeAreaView>
   );
