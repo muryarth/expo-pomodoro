@@ -1,24 +1,12 @@
-import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import Pomodoro from "./src/telas/pomodoro";
+import React from "react";
+import { SafeAreaView, StatusBar } from "react-native";
+import Rotas from "./src/rotas";
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.content}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
-      <Pomodoro />
+      <Rotas />
     </SafeAreaView>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  // content: {
-  //   backgroundColor: "#caf1f8",
-  //   flex: 1,
-  // },
-
-  content: {
-    backgroundColor: "#ffffff",
-    flex: 1,
-  },
-})
