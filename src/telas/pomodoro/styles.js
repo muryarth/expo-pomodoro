@@ -15,18 +15,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     justifyContent: "center",
     borderRadius: 24,
-    
+
     // IOS
     shadowColor: "black",
-    shadowOffset: { width: 10, height: 10,  },
+    shadowOffset: { width: 10, height: 10 },
     shadowOpacity: 0.8,
 
     // Android
-    elevation: 10
+    elevation: 10,
   },
 
   buttonGroup: {
     flexDirection: "row",
+  },
+
+  button: {
+    marginHorizontal: 3,
+    marginVertical: 10,
   },
 });
 

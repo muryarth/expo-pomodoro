@@ -8,6 +8,7 @@ import BellRing from "../../../assets/sounds/bell_single_ring_zapsplat.mp3";
 // componentes globais
 import Credits from "../../componentes/Credits";
 import StyledButton from "../../componentes/StyledButton";
+import TouchableIcon from "../../componentes/TouchableIcon";
 
 // componentes
 import Relogio from "./relogio";
@@ -17,7 +18,7 @@ import Schedule from "./schedule";
 import styles from "./styles";
 
 export default function Pomodoro() {
-  // const [sound, setSound] = React.useState();
+  const iconSize = 50;
   const [time, setTime] = React.useState(10);
   const [onFocusTime, setOnFocusTime] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
@@ -60,26 +61,24 @@ export default function Pomodoro() {
           {/* <Schedule ciclesLength={3} subciclesLength={4} /> */}
         </View>
         <View style={styles.buttonGroup}>
-          {onFocusTime ? (
-            <>
-              <StyledButton
-                title="Pausar"
-                action={() => togglePause(isPaused)}
-                style="secondaryButton"
-              />
-              <StyledButton
-                title="Parar"
-                action={() => toggleFocusTime(onFocusTime)}
-                style="secondaryButton"
-              />
-            </>
-          ) : (
-            <StyledButton
-              title="Começar"
-              action={() => toggleFocusTime(onFocusTime)}
-              style="secondaryButton"
-            />
-          )}
+          <TouchableIcon
+            style={styles.button}
+            iconName="pause-circle-outline"
+            size={iconSize}
+            action={() => togglePause(isPaused)}
+          />
+          <TouchableIcon
+            style={styles.button}
+            iconName="play-circle-outline"
+            size={iconSize}
+            action={() => toggleFocusTime(onFocusTime)}
+          />
+          <TouchableIcon
+            style={styles.button}
+            size={iconSize}
+            iconName="stop-circle-outline"
+            action={() => toggleFocusTime(onFocusTime)}
+          />
         </View>
         <Credits />
       </View>
