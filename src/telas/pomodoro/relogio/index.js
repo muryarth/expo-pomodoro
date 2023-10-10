@@ -37,7 +37,7 @@ export default function countdownClock({ timeInMinutes, isActive, isPaused }) {
   // resetTimer();
 
   useEffect(() => {
-    return runTimer(isActive, 0.1);
+    return runTimer(isActive, timeInMinutes);
   }, [isActive]);
 
   const changeTimer = (timeInSeconds) => {

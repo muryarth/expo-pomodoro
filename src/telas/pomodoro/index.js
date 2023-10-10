@@ -57,8 +57,8 @@ export default function Pomodoro() {
     <>
       <View style={styles.container}>
         <View style={styles.clock}>
-          <Relogio timeInMinutes={1} isActive={onFocusTime} />
-          {/* <Schedule ciclesLength={3} subciclesLength={4} /> */}
+          <Relogio timeInMinutes={30} isActive={onFocusTime} />
+          <Schedule subciclesLength={4} ciclesLength={3} />
         </View>
         <View style={styles.buttonGroup}>
           <TouchableIcon
