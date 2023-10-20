@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Audio } from "expo-av";
 
@@ -18,47 +18,90 @@ import Schedule from "./schedule";
 import styles from "./styles";
 
 export default function Pomodoro() {
+  // Outras variáveis
   const iconSize = 50;
-  const [time, setTime] = React.useState(10);
-  const [onFocusTime, setOnFocusTime] = React.useState(false);
-  const [isPaused, setIsPaused] = React.useState(false);
+  const totalTimeInSeconds = 10; // Tempo da contagem
 
-  // Toca o som
-  const playSound = async (time) => {
-    console.log("Loading sound...");
+  // Hooks
+  const [hours, setHours] = useState();
+  const [minutes, setMinutes] = useState();
+  const [seconds, setSeconds] = useState(totalTimeInSeconds);
+  const [isDisabled, setIsDisabled] = useState(false); // Referente ao estado do botão
+  const [isActive, setIsActive] = useState(false); // Referente ao timer
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentPausedTime, setCurrentPausedTime] = useState();
 
-    const { sound } = await Audio.Sound.createAsync(BellRing);
-
-    // Toca o som, após intervalo de tempo definido
-    setTimeout(async function () {
-      console.log("Playing sound!");
-      await sound.playAsync();
-    }, time);
+  const toggleDisabledButton = () => {
+    setIsDisabled(!isDisabled);
   };
 
-  // Alternar para o modo de foco
-  const toggleFocusTime = (onFocusTime) => {
-    if (!onFocusTime) {
-      console.log("Modo de foco ativado!");
-    } else {
-      console.log("Modo de foco desativado!");
-    }
-    setOnFocusTime(!onFocusTime);
+  const resetTimer = (totalTimeInSeconds) => {
+    console.log("Reseting timer...");
+    toggleDisabledButton();
+    setIsActive(false);
+    setIsPaused(false);
+    setHours(0);
+    setMinutes(0);
+    setSeconds(totalTimeInSeconds);
+    setCurrentPausedTime(null);
   };
 
-  // Pausar contagem do tempo
-  const togglePause = (isPaused) => {
-    console.log("Pausado...");
+  const togglePause = () => {
+    console.log(!isPaused ? "Pausing..." : "Unpausing...");
     setIsPaused(!isPaused);
   };
 
-  // Renderiza componentes
+  const playTimer = () => {
+    console.log("Playing timer...");
+    toggleDisabledButton();
+    setIsActive(true);
+  };
+
+  const handleTimer = (
+    isActive,
+    isPaused,
+    currentPausedTime = null,
+    totalTimeInSeconds
+  ) => {
+    let timeInSeconds =
+      currentPausedTime == null ? totalTimeInSeconds : currentPausedTime;
+    let interval;
+
+    if (isActive && !isPaused) {
+      interval = setInterval(() => {
+        timeInSeconds--;
+        console.log(timeInSeconds);
+        if (timeInSeconds <= 0) {
+          resetTimer();
+          // playSound();
+          return clearInterval(interval);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      setCurrentPausedTime(timeInSeconds);
+      clearInterval(interval);
+    };
+  };
+
+  // Roda sempre que os estado "isActive" for true
+  useEffect(() => {
+    return handleTimer(
+      isActive,
+      isPaused,
+      currentPausedTime,
+      totalTimeInSeconds
+    );
+  }, [isActive, isPaused]);
+
+  // Renderiza os componentes da aplicação
   return (
     <>
       <View style={styles.container}>
         <View style={styles.clock}>
-          <Relogio timeInMinutes={30} isActive={onFocusTime} />
-          <Schedule subciclesLength={4} ciclesLength={3} />
+          <Relogio {...{ hours, minutes, seconds }} />
+          {/* <Schedule subciclesLength={3} ciclesLength={3} /> */}
         </View>
         <View style={styles.buttonGroup}>
           {/* Pause */}
@@ -66,21 +109,24 @@ export default function Pomodoro() {
             style={styles.button}
             iconName="pause-circle-outline"
             size={iconSize}
-            action={() => togglePause(isPaused)}
+            action={() => togglePause()}
+            disabled={!isDisabled}
           />
           {/* Play */}
           <TouchableIcon
             style={styles.button}
             iconName="play-circle-outline"
             size={iconSize}
-            action={() => toggleFocusTime(onFocusTime)}
+            action={() => playTimer()}
+            disabled={isDisabled}
           />
           {/* Reset */}
           <TouchableIcon
             style={styles.button}
             iconName="stop-circle-outline"
             size={iconSize}
-            action={() => toggleFocusTime(onFocusTime)}
+            action={() => resetTimer()}
+            disabled={!isDisabled}
           />
         </View>
         <Credits />

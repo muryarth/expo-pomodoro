@@ -8,11 +8,16 @@ export default function TouchableIcon({
   iconName = "attach",
   size = 50,
   color = "white",
+  disabled = false,
 }) {
   return (
     <>
-      <TouchableOpacity style={style} onPress={action}>
-        <Ionicons name={iconName} size={size} color={color} />
+      <TouchableOpacity style={style} onPress={action} disabled={disabled}>
+        <Ionicons
+          name={iconName}
+          size={size}
+          color={disabled ? "grey" : color}
+        />
       </TouchableOpacity>
     </>
   );
