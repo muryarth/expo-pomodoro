@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 
 import styles from "./styles";
@@ -23,6 +23,12 @@ export default function countdownClock({
   const [hours, setHours] = useState(formatArgument(timeInHours));
   const [minutes, setMinutes] = useState(formatArgument(timeInMinutes));
   const [seconds, setSeconds] = useState(formatArgument(timeInSeconds));
+
+  useEffect(() => {
+    setHours(formatArgument(timeInHours));
+    setMinutes(formatArgument(timeInMinutes));
+    setSeconds(formatArgument(timeInSeconds));
+  }, [timeInHours, timeInMinutes, timeInSeconds]);
 
   return (
     <>
