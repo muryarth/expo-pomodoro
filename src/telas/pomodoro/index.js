@@ -61,22 +61,25 @@ export default function Pomodoro() {
           <Schedule subciclesLength={4} ciclesLength={3} />
         </View>
         <View style={styles.buttonGroup}>
+          {/* Pause */}
           <TouchableIcon
             style={styles.button}
             iconName="pause-circle-outline"
             size={iconSize}
             action={() => togglePause(isPaused)}
           />
+          {/* Play */}
           <TouchableIcon
             style={styles.button}
             iconName="play-circle-outline"
             size={iconSize}
             action={() => toggleFocusTime(onFocusTime)}
           />
+          {/* Reset */}
           <TouchableIcon
             style={styles.button}
-            size={iconSize}
             iconName="stop-circle-outline"
+            size={iconSize}
             action={() => toggleFocusTime(onFocusTime)}
           />
         </View>
