@@ -66,7 +66,7 @@ export default function Pomodoro() {
 
   // Inicia o andamento do timer
   const playTimer = () => {
-    if (currentTime > 0) {
+    if (currentTime > 0) { // Impede que o usuário dê play com um tempo menor ou igual a 0 segundos
       console.log("Playing timer...");
       toggleDisabledButton();
       setIsActive(true);
