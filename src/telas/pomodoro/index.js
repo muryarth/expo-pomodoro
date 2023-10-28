@@ -20,17 +20,17 @@ import styles from "./styles";
 export default function Pomodoro() {
   // Outras variáveis
   const iconSize = 50;
-  const totalTimeInSeconds = 60; // Tempo da contagem
+  const totalTimeInSeconds = 59; // Tempo da contagem
 
   // Hooks
   const [sound, setSound] = useState();
-  const [hours, setHours] = useState();
-  const [minutes, setMinutes] = useState();
-  const [seconds, setSeconds] = useState(totalTimeInSeconds);
+  const [hours, setHours] = useState("00"); // Somente para renderização dos estados no relógio
+  const [minutes, setMinutes] = useState("00"); // Somente para renderização dos estados no relógio
+  const [seconds, setSeconds] = useState("00"); // Somente para renderização dos estados no relógio
   const [isDisabled, setIsDisabled] = useState(false); // Referente ao estado do botão
   const [isActive, setIsActive] = useState(false); // Referente ao timer
   const [isPaused, setIsPaused] = useState(false); // Referente ao timer
-  const [currentTime, setCurrentTime] = useState(totalTimeInSeconds);
+  const [currentTime, setCurrentTime] = useState(); // Estado referente à progressão da contagem do tempo
 
   // Toca o som após intervalo de tempo definido
   const playSound = async (time) => {
@@ -49,15 +49,13 @@ export default function Pomodoro() {
   };
 
   // Reseta os estados de cada hook
-  const resetTimer = (totalTimeInSeconds) => {
+  const resetTimer = () => {
     console.log("Reseting timer...");
     toggleDisabledButton();
     setIsActive(false);
     setIsPaused(false);
-    setHours(0);
-    setMinutes(0);
-    setSeconds(totalTimeInSeconds);
     setCurrentTime(totalTimeInSeconds);
+    updateTimer(totalTimeInSeconds);
   };
 
   // Pausa o andamento do timer
@@ -68,12 +66,14 @@ export default function Pomodoro() {
 
   // Inicia o andamento do timer
   const playTimer = () => {
-    console.log("Playing timer...");
-    toggleDisabledButton();
-    setIsActive(true);
+    if (currentTime > 0) {
+      console.log("Playing timer...");
+      toggleDisabledButton();
+      setIsActive(true);
+    }
   };
 
-  // Muda o valor do timer na tela, acompanhando o andamento do tempo
+  // Muda o valor do timer na tela, acompanhando o andamento do tempo (em segundos)
   const updateTimer = (timeInSeconds) => {
     let totalTimeInSeconds = timeInSeconds;
     let minutesLeft = Math.floor(totalTimeInSeconds / 60);
@@ -127,6 +127,12 @@ export default function Pomodoro() {
     return handleTimer();
   }, [isActive, isPaused]);
 
+  // Monta o componente
+  useEffect(() => {
+    setCurrentTime(totalTimeInSeconds);
+    updateTimer(totalTimeInSeconds);
+  }, []);
+
   // Renderiza os componentes da aplicação
   return (
     <>
@@ -157,7 +163,7 @@ export default function Pomodoro() {
             style={styles.button}
             iconName="stop-circle-outline"
             size={iconSize}
-            action={() => resetTimer(totalTimeInSeconds)}
+            action={() => resetTimer()}
             disabled={!isDisabled}
           />
         </View>
