@@ -9,9 +9,9 @@ export default function countdownClock({
   seconds: timeInSeconds = "00",
 }) {
   // Formata o número que será exibido no relógio
-  const formatArgument = (timeNumber) => {
+  const formatArgument = (timeNumber, timeCap = 59) => {
     let timeString;
-    if (timeNumber >= 10 && timeNumber <= 60) {
+    if (timeNumber >= 10 && timeNumber <= timeCap) {
       return timeNumber.toString();
     } else if (timeNumber < 10 && timeNumber >= 1) {
       timeString = `0${timeNumber}`;
@@ -20,12 +20,12 @@ export default function countdownClock({
     return "00";
   };
 
-  const [hours, setHours] = useState(formatArgument(timeInHours));
+  const [hours, setHours] = useState(formatArgument(timeInHours, 24));
   const [minutes, setMinutes] = useState(formatArgument(timeInMinutes));
   const [seconds, setSeconds] = useState(formatArgument(timeInSeconds));
 
   useEffect(() => {
-    setHours(formatArgument(timeInHours));
+    setHours(formatArgument(timeInHours, 24));
     setMinutes(formatArgument(timeInMinutes));
     setSeconds(formatArgument(timeInSeconds));
   }, [timeInHours, timeInMinutes, timeInSeconds]);
