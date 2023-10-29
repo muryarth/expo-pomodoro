@@ -1,55 +1,69 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import styles from "./styles";
 
 const renderSchedule = (
   size,
   color,
-  ciclesLength,
-  subciclesLength,
-  currentProgress
+  cyclesLength,
+  subcyclesLength,
+  currentCyclesProgress
 ) => {
-  const cicles = [];
+  const cycles = [];
+  let currentCyclesProgressCount = currentCyclesProgress;
+  // console.log(currentCyclesProgressCount);
 
-  for (let countCicles = 0; countCicles < ciclesLength; countCicles++) {
+  for (let countCycles = 0; countCycles < cyclesLength; countCycles++) {
     let row = [];
     for (
-      let countSubcicles = 0;
-      countSubcicles < subciclesLength;
-      countSubcicles++
+      let countSubcycles = 0;
+      countSubcycles < subcyclesLength;
+      countSubcycles++
     ) {
       row.push(
         <FontAwesome
           style={{ marginHorizontal: 1 }}
-          name="circle-o"
+          name={currentCyclesProgressCount > 0 ? "circle" : "circle-o"}
           size={size}
           color={color}
         />
       );
+      currentCyclesProgressCount--;
     }
-    cicles.push(<View style={styles.cicle}>{row}</View>);
+    cycles.push(<View style={styles.cicle}>{row}</View>);
   }
 
-  return cicles;
+  return cycles;
 };
 
 export default function Schedule({
-  size = 16,
-  color = "black",
-  ciclesLength = 3,
-  subciclesLength = 4,
-  currentProgress,
+  size = 13,
+  color = "#000",
+  cyclesLength = 3,
+  subcyclesLength = 4,
+  currentCyclesProgress,
 }) {
+  const dinamicImageSize = cyclesLength > 3 || subcyclesLength > 4 ? 10 : size;
+  const totalSubcycles = cyclesLength * subcyclesLength;
+
   return (
-    <View style={styles.content}>
-      {renderSchedule(
-        size,
-        color,
-        ciclesLength,
-        subciclesLength,
-        currentProgress
+    <>
+      {totalSubcycles > 16 ? (
+        <View>
+          <Text>16+</Text>
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {renderSchedule(
+            dinamicImageSize,
+            color,
+            cyclesLength,
+            subcyclesLength,
+            currentCyclesProgress
+          )}
+        </View>
       )}
-    </View>
+    </>
   );
 }

@@ -16,9 +16,15 @@ import Schedule from "./schedule";
 // Estilos
 import styles from "./styles";
 
-export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
+export default function Pomodoro({
+  totalTimeInSeconds = 2100,
+  cyclesLength = 4,
+  subcyclesLength = 4,
+  selectedClockTheme = "tomato",
+}) {
   // Outras variáveis
   const iconSize = 50;
+  const subcyclesTotalLength = cyclesLength * subcyclesLength;
 
   // Hooks
   const [sound, setSound] = useState();
@@ -29,6 +35,7 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
   const [isActive, setIsActive] = useState(false); // Referente ao timer
   const [isPaused, setIsPaused] = useState(false); // Referente ao timer
   const [currentTime, setCurrentTime] = useState(totalTimeInSeconds); // Estado referente à progressão da contagem do tempo
+  const [currentCyclesProgress, setCurrentCyclesProgress] = useState(0);
 
   // Toca som da notificação após intervalo de tempo definido
   const playSound = async (time) => {
@@ -42,14 +49,22 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
     }, time);
   };
 
-  const toggleDisabledButton = () => {
-    setIsDisabled(!isDisabled);
+  // Não parece mais necessário, estou testando o funcionamento da app sem essa função
+  // const toggleDisabledButton = () => {
+  //   setIsDisabled(!isDisabled);
+  // };
+
+  // Reseta tudo, incluindo os ciclos já concluídos
+  const resetAll = () => {
+    console.log("Reseting all...");
+    setCurrentCyclesProgress(0);
+    resetTimer();
   };
 
   // Reseta os estados de cada hook
   const resetTimer = () => {
     console.log("Reseting timer...");
-    toggleDisabledButton();
+    setIsDisabled(false);
     setIsActive(false);
     setIsPaused(false);
     setCurrentTime(totalTimeInSeconds);
@@ -69,10 +84,14 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
     // let dateTime = date.toLocaleString();
     // console.log(`${dateTime}`);
 
-    if (currentTime > 0 && currentTime <= 86400) {
+    if (
+      currentTime > 0 &&
+      currentTime <= 86400 &&
+      currentCyclesProgress < subcyclesTotalLength
+    ) {
       // Impede que o usuário dê play com um tempo menor ou igual a 0 segundos
       console.log("Playing timer...");
-      toggleDisabledButton();
+      setIsDisabled(true);
       setIsActive(true);
     }
   };
@@ -113,12 +132,16 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
     if (isActive && !isPaused) {
       interval = setInterval(() => {
         timeInSeconds--;
-        updateTimerRender(timeInSeconds);
-        setCurrentTime(timeInSeconds);
+        updateTimerRender(timeInSeconds); // Atualiza o render do relógio
+        setCurrentTime(timeInSeconds); // Registra o andamento do tempo
 
+        // Para a contagem quando tempo é igual a zero
         if (timeInSeconds <= 0) {
-          resetTimer(totalTimeInSeconds);
           playSound();
+          resetTimer(totalTimeInSeconds);
+          if (currentCyclesProgress < subcyclesTotalLength) {
+            setCurrentCyclesProgress(currentCyclesProgress + 1);
+          }
           return clearInterval(interval);
         }
       }, 1000);
@@ -126,7 +149,7 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
 
     // Limpa o intervalo
     return () => {
-      if (!isActive) setCurrentTime(totalTimeInSeconds); // Reseta o timer
+      if (!isActive) setCurrentTime(totalTimeInSeconds); // Reseta o timer quando aperta em "STOP"
       clearInterval(interval);
     };
   };
@@ -138,23 +161,32 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
 
   // Executa quando componente é montado
   useEffect(() => {
-    // Limita um máximo de 24h
-    const displayedTime = totalTimeInSeconds <= 86400 ? totalTimeInSeconds : 0;
-
-    setCurrentTime(displayedTime);
-    updateTimerRender(displayedTime);
+    if (!isActive) {
+      // Limita um máximo de 24h
+      const displayedTime =
+        totalTimeInSeconds <= 86400 ? totalTimeInSeconds : 0;
+      setCurrentTime(displayedTime);
+      updateTimerRender(displayedTime);
+    }
   }, []);
 
   // Renderiza os componentes da aplicação
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.clock}>
+        <View style={[styles.clock, { backgroundColor: "white" }]}>
           {/* Exibição do relógio */}
-          <Relogio {...{ hours, minutes, seconds }} />
+          <Relogio
+            {...{ color: selectedClockTheme, hours, minutes, seconds }}
+          />
 
           {/* Exibição dos ciclos do pomodoro */}
-          {/* <Schedule subciclesLength={3} ciclesLength={3} /> */}
+          <Schedule
+            currentCyclesProgress={currentCyclesProgress}
+            subcyclesLength={subcyclesLength}
+            cyclesLength={cyclesLength}
+            color={selectedClockTheme}
+          />
         </View>
         <View style={styles.buttonGroup}>
           {/* Pause */}
@@ -173,13 +205,21 @@ export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
             action={() => playTimer()}
             disabled={isDisabled}
           />
-          {/* Reset */}
+          {/* Stop current cycle */}
           <TouchableIcon
             style={styles.button}
             iconName="stop-circle-outline"
             size={iconSize}
             action={() => resetTimer()}
             disabled={!isDisabled}
+          />
+          {/* Reset all */}
+          <TouchableIcon
+            style={styles.button}
+            iconName="refresh-circle-outline"
+            size={iconSize}
+            action={() => resetAll()}
+            disabled={!(currentCyclesProgress > 0)}
           />
         </View>
         <Credits />

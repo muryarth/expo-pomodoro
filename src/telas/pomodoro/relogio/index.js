@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 
-import styles from "./styles";
+import defaultStyles from "./styles";
 
 export default function countdownClock({
+  color = "#000",
   hours: timeInHours = "00",
   minutes: timeInMinutes = "00",
   seconds: timeInSeconds = "00",
 }) {
   // Formata o número que será exibido no relógio
-  const formatArgument = (timeNumber, timeCap = 59) => {
+  const formatArgument = (timeNumber, timeFormatCap = 59) => {
     let timeString;
-    if (timeNumber >= 10 && timeNumber <= timeCap) {
+    if (timeNumber >= 10 && timeNumber <= timeFormatCap) {
       return timeNumber.toString();
     } else if (timeNumber < 10 && timeNumber >= 1) {
       timeString = `0${timeNumber}`;
@@ -32,7 +33,9 @@ export default function countdownClock({
 
   return (
     <>
-      <Text style={styles.relogio}>{`${hours}:${minutes}:${seconds}`}</Text>
+      <Text
+        style={[defaultStyles.relogio, { color: color }]}
+      >{`${hours}:${minutes}:${seconds}`}</Text>
     </>
   );
 }
