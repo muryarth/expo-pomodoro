@@ -1,10 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
+import styles from "./styles.js";
 
 export default function Perfil() {
   return (
     <>
-      <Text>Perfil</Text>
+      <View style={styles.container}>
+      </View>
     </>
   );
 }

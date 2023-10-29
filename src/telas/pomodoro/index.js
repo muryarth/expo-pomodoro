@@ -16,7 +16,7 @@ import Schedule from "./schedule";
 // Estilos
 import styles from "./styles";
 
-export default function Pomodoro({ totalTimeInSeconds = 3600 }) {
+export default function Pomodoro({ totalTimeInSeconds = 1800 }) {
   // Outras variáveis
   const iconSize = 50;
 
@@ -138,6 +138,7 @@ export default function Pomodoro({ totalTimeInSeconds = 3600 }) {
 
   // Executa quando componente é montado
   useEffect(() => {
+    // Limita um máximo de 24h
     const displayedTime = totalTimeInSeconds <= 86400 ? totalTimeInSeconds : 0;
 
     setCurrentTime(displayedTime);
