@@ -3,6 +3,8 @@ import { Text } from "react-native";
 
 import defaultStyles from "./styles";
 
+import StyledButton from "../../../componentes/StyledButton";
+
 export default function countdownClock({
   color = "#000",
   hours: timeInHours = "00",
@@ -36,6 +38,7 @@ export default function countdownClock({
       <Text
         style={[defaultStyles.relogio, { color: color }]}
       >{`${hours}:${minutes}:${seconds}`}</Text>
+      {/* <StyledButton action={() => acao()} title="TESTE"></StyledButton> */}
     </>
   );
 }

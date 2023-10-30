@@ -17,10 +17,10 @@ import Schedule from "./schedule";
 import styles from "./styles";
 
 export default function Pomodoro({
-  totalTimeInSeconds = 2100,
-  cyclesLength = 4,
+  totalTimeInSeconds = 5,
+  cyclesLength = 5,
   subcyclesLength = 4,
-  selectedClockTheme = "tomato",
+  selectedClockTheme = "#000",
 }) {
   // Outras variáveis
   const iconSize = 50;
@@ -177,12 +177,17 @@ export default function Pomodoro({
         <View style={[styles.clock, { backgroundColor: "white" }]}>
           {/* Exibição do relógio */}
           <Relogio
-            {...{ color: selectedClockTheme, hours, minutes, seconds }}
+            {...{
+              color: selectedClockTheme,
+              hours,
+              minutes,
+              seconds,
+            }}
           />
 
           {/* Exibição dos ciclos do pomodoro */}
           <Schedule
-            currentCyclesProgress={currentCyclesProgress}
+            currentSubcyclesProgress={currentCyclesProgress}
             subcyclesLength={subcyclesLength}
             cyclesLength={cyclesLength}
             color={selectedClockTheme}
