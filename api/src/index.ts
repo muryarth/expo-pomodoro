@@ -1,3 +1,6 @@
-import * as fs from "fs";
+// import * as fs from "fs";
+// import "dotenv/config";
 
-fs;
+// fs;
+
+console.log("Hello World!");
