@@ -17,7 +17,7 @@ import Schedule from "./schedule";
 import styles from "./styles";
 
 export default function Pomodoro({
-  totalTimeInSeconds = 5,
+  totalTimeInSeconds = 2,
   cyclesLength = 5,
   subcyclesLength = 4,
   selectedClockTheme = "#000",
